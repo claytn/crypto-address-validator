@@ -2298,126 +2298,156 @@ exports.isHead = transaction_1.isHead;
 exports.isTransaction = transaction_1.isTransaction;
 
 },{"../../errors":31,"../../guards":32,"@iota/checksum":1,"@iota/transaction":27}],34:[function(require,module,exports){
-'use strict'
 // base-x encoding / decoding
 // Copyright (c) 2018 base-x contributors
 // Copyright (c) 2014-2018 The Bitcoin Core developers (base58.cpp)
 // Distributed under the MIT software license, see the accompanying
 // file LICENSE or http://www.opensource.org/licenses/mit-license.php.
-// @ts-ignore
-var _Buffer = require('safe-buffer').Buffer
-function base (ALPHABET) {
-  if (ALPHABET.length >= 255) { throw new TypeError('Alphabet too long') }
-  var BASE_MAP = new Uint8Array(256)
+
+const Buffer = require('safe-buffer').Buffer
+
+module.exports = function base (ALPHABET) {
+  if (ALPHABET.length >= 255) throw new TypeError('Alphabet too long')
+
+  const BASE_MAP = new Uint8Array(256)
   BASE_MAP.fill(255)
-  for (var i = 0; i < ALPHABET.length; i++) {
-    var x = ALPHABET.charAt(i)
-    var xc = x.charCodeAt(0)
-    if (BASE_MAP[xc] !== 255) { throw new TypeError(x + ' is ambiguous') }
+
+  for (let i = 0; i < ALPHABET.length; i++) {
+    const x = ALPHABET.charAt(i)
+    const xc = x.charCodeAt(0)
+
+    if (BASE_MAP[xc] !== 255) throw new TypeError(x + ' is ambiguous')
     BASE_MAP[xc] = i
   }
-  var BASE = ALPHABET.length
-  var LEADER = ALPHABET.charAt(0)
-  var FACTOR = Math.log(BASE) / Math.log(256) // log(BASE) / log(256), rounded up
-  var iFACTOR = Math.log(256) / Math.log(BASE) // log(256) / log(BASE), rounded up
+
+  const BASE = ALPHABET.length
+  const LEADER = ALPHABET.charAt(0)
+  const FACTOR = Math.log(BASE) / Math.log(256) // log(BASE) / log(256), rounded up
+  const iFACTOR = Math.log(256) / Math.log(BASE) // log(256) / log(BASE), rounded up
+
   function encode (source) {
-    if (!_Buffer.isBuffer(source)) { throw new TypeError('Expected Buffer') }
-    if (source.length === 0) { return '' }
-        // Skip & count leading zeroes.
-    var zeroes = 0
-    var length = 0
-    var pbegin = 0
-    var pend = source.length
+    if (!Buffer.isBuffer(source)) throw new TypeError('Expected Buffer')
+    if (source.length === 0) return ''
+
+    // Skip & count leading zeroes.
+    let zeroes = 0
+    let length = 0
+    let pbegin = 0
+    const pend = source.length
+
     while (pbegin !== pend && source[pbegin] === 0) {
       pbegin++
       zeroes++
     }
-        // Allocate enough space in big-endian base58 representation.
-    var size = ((pend - pbegin) * iFACTOR + 1) >>> 0
-    var b58 = new Uint8Array(size)
-        // Process the bytes.
+
+    // Allocate enough space in big-endian base58 representation.
+    const size = ((pend - pbegin) * iFACTOR + 1) >>> 0
+    const b58 = new Uint8Array(size)
+
+    // Process the bytes.
     while (pbegin !== pend) {
-      var carry = source[pbegin]
-            // Apply "b58 = b58 * 256 + ch".
-      var i = 0
-      for (var it1 = size - 1; (carry !== 0 || i < length) && (it1 !== -1); it1--, i++) {
-        carry += (256 * b58[it1]) >>> 0
-        b58[it1] = (carry % BASE) >>> 0
+      let carry = source[pbegin]
+
+      // Apply "b58 = b58 * 256 + ch".
+      let i = 0
+      for (let it = size - 1; (carry !== 0 || i < length) && (it !== -1); it--, i++) {
+        carry += (256 * b58[it]) >>> 0
+        b58[it] = (carry % BASE) >>> 0
         carry = (carry / BASE) >>> 0
       }
-      if (carry !== 0) { throw new Error('Non-zero carry') }
+
+      if (carry !== 0) throw new Error('Non-zero carry')
       length = i
       pbegin++
     }
-        // Skip leading zeroes in base58 result.
-    var it2 = size - length
-    while (it2 !== size && b58[it2] === 0) {
-      it2++
+
+    // Skip leading zeroes in base58 result.
+    let it = size - length
+    while (it !== size && b58[it] === 0) {
+      it++
     }
-        // Translate the result into a string.
-    var str = LEADER.repeat(zeroes)
-    for (; it2 < size; ++it2) { str += ALPHABET.charAt(b58[it2]) }
+
+    // Translate the result into a string.
+    let str = LEADER.repeat(zeroes)
+    for (; it < size; ++it) str += ALPHABET.charAt(b58[it])
+
     return str
   }
+
   function decodeUnsafe (source) {
-    if (typeof source !== 'string') { throw new TypeError('Expected String') }
-    if (source.length === 0) { return _Buffer.alloc(0) }
-    var psz = 0
-        // Skip leading spaces.
-    if (source[psz] === ' ') { return }
-        // Skip and count leading '1's.
-    var zeroes = 0
-    var length = 0
+    if (typeof source !== 'string') throw new TypeError('Expected String')
+    if (source.length === 0) return Buffer.alloc(0)
+
+    let psz = 0
+
+    // Skip leading spaces.
+    if (source[psz] === ' ') return
+
+    // Skip and count leading '1's.
+    let zeroes = 0
+    let length = 0
     while (source[psz] === LEADER) {
       zeroes++
       psz++
     }
-        // Allocate enough space in big-endian base256 representation.
-    var size = (((source.length - psz) * FACTOR) + 1) >>> 0 // log(58) / log(256), rounded up.
-    var b256 = new Uint8Array(size)
-        // Process the characters.
+
+    // Allocate enough space in big-endian base256 representation.
+    const size = (((source.length - psz) * FACTOR) + 1) >>> 0 // log(58) / log(256), rounded up.
+    const b256 = new Uint8Array(size)
+
+    // Process the characters.
     while (source[psz]) {
-            // Decode character
-      var carry = BASE_MAP[source.charCodeAt(psz)]
-            // Invalid character
-      if (carry === 255) { return }
-      var i = 0
-      for (var it3 = size - 1; (carry !== 0 || i < length) && (it3 !== -1); it3--, i++) {
-        carry += (BASE * b256[it3]) >>> 0
-        b256[it3] = (carry % 256) >>> 0
+      // Decode character
+      let carry = BASE_MAP[source.charCodeAt(psz)]
+
+      // Invalid character
+      if (carry === 255) return
+
+      let i = 0
+      for (let it = size - 1; (carry !== 0 || i < length) && (it !== -1); it--, i++) {
+        carry += (BASE * b256[it]) >>> 0
+        b256[it] = (carry % 256) >>> 0
         carry = (carry / 256) >>> 0
       }
-      if (carry !== 0) { throw new Error('Non-zero carry') }
+
+      if (carry !== 0) throw new Error('Non-zero carry')
       length = i
       psz++
     }
-        // Skip trailing spaces.
-    if (source[psz] === ' ') { return }
-        // Skip leading zeroes in b256.
-    var it4 = size - length
-    while (it4 !== size && b256[it4] === 0) {
-      it4++
+
+    // Skip trailing spaces.
+    if (source[psz] === ' ') return
+
+    // Skip leading zeroes in b256.
+    let it = size - length
+    while (it !== size && b256[it] === 0) {
+      it++
     }
-    var vch = _Buffer.allocUnsafe(zeroes + (size - it4))
+
+    const vch = Buffer.allocUnsafe(zeroes + (size - it))
     vch.fill(0x00, 0, zeroes)
-    var j = zeroes
-    while (it4 !== size) {
-      vch[j++] = b256[it4++]
+
+    let j = zeroes
+    while (it !== size) {
+      vch[j++] = b256[it++]
     }
+
     return vch
   }
+
   function decode (string) {
-    var buffer = decodeUnsafe(string)
-    if (buffer) { return buffer }
+    const buffer = decodeUnsafe(string)
+    if (buffer) return buffer
+
     throw new Error('Non-base' + BASE + ' character')
   }
+
   return {
     encode: encode,
     decodeUnsafe: decodeUnsafe,
     decode: decode
   }
 }
-module.exports = base
 
 },{"safe-buffer":101}],35:[function(require,module,exports){
 'use strict'
@@ -17915,8 +17945,6 @@ function SafeBuffer (arg, encodingOrOffset, length) {
   return Buffer(arg, encodingOrOffset, length)
 }
 
-SafeBuffer.prototype = Object.create(Buffer.prototype)
-
 // Copy static methods from Buffer
 copyProps(Buffer, SafeBuffer)
 
@@ -18269,8 +18297,18 @@ function isValidP2PKHandP2SHAddress (address, currency, networkType) {
 }
 
 module.exports = {
-  isValidAddress: function (address, currency, networkType) {
-    return isValidP2PKHandP2SHAddress(address, currency, networkType) || segwit.isValidAddress(address)
+  isValidAddress: function (address, currency, networkType, opts) {
+    if (opts == null) {
+      opts = {
+        segwit: true,
+      }
+    }
+
+    if (opts.segwit) {
+      return isValidP2PKHandP2SHAddress(address, currency, networkType) || segwit.isValidAddress(address)
+    }
+
+    return isValidP2PKHandP2SHAddress(address, currency, networkType)
   }
 }
 
@@ -22409,11 +22447,11 @@ var currencies = require('./currencies')
 var DEFAULT_CURRENCY_NAME = 'bitcoin'
 
 module.exports = {
-  validate: function (address, currencyNameOrSymbol, networkType) {
+  validate: function (address, currencyNameOrSymbol, networkType, opts) {
     var currency = currencies.getByNameOrSymbol(currencyNameOrSymbol || DEFAULT_CURRENCY_NAME)
 
     if (currency && currency.validator) {
-      return currency.validator.isValidAddress(address, currency, networkType)
+      return currency.validator.isValidAddress(address, currency, networkType, opts)
     }
 
     throw new Error('Missing validator for currency: ' + currencyNameOrSymbol)
