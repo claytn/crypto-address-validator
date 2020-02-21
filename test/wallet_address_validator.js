@@ -7,13 +7,13 @@ var expect = chai.expect
 
 var WAValidator = isNode ? require('../src/wallet_address_validator') : window.WAValidator
 
-function valid (address, currency, networkType) {
-  var result = WAValidator.validate(address, currency, networkType)
+function valid (address, currency, networkType, opts) {
+  var result = WAValidator.validate(address, currency, networkType, opts)
   expect(result).to.equal(true)
 }
 
-function invalid (address, currency, networkType) {
-  var result = WAValidator.validate(address, currency, networkType)
+function invalid (address, currency, networkType, opts) {
+  var result = WAValidator.validate(address, currency, networkType, opts)
   expect(result).to.equal(false)
 }
 
@@ -46,6 +46,20 @@ describe('WAValidator.validate()', function () {
       valid('BC1SW50QA3JX3S', 'bitcoin')
       valid('bc1zw508d6qejxtdg4y5r3zarvaryvg6kdaj', 'bitcoin')
       valid('tb1qqqqqp399et2xygdj5xreqhjjvcmzhxw4aywxecjdzew6hylgvsesrxh6hy', 'bitcoin')
+
+      invalid('BC1QW508D6QEJXTDG4Y5R3ZARVARY0C5XW7KV8F3T4', 'bitcoin', null, { segwit: false })
+      invalid('tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7', 'bitcoin', null, { segwit: false })
+      invalid('bc1pw508d6qejxtdg4y5r3zarvary0c5xw7kw508d6qejxtdg4y5r3zarvary0c5xw7k7grplx', 'bitcoin', null, { segwit: false })
+      invalid('BC1SW50QA3JX3S', 'bitcoin', null, { segwit: false })
+      invalid('bc1zw508d6qejxtdg4y5r3zarvaryvg6kdaj', 'bitcoin', null, { segwit: false })
+      invalid('tb1qqqqqp399et2xygdj5xreqhjjvcmzhxw4aywxecjdzew6hylgvsesrxh6hy', 'bitcoin', null, { segwit: false })
+
+      valid('BC1QW508D6QEJXTDG4Y5R3ZARVARY0C5XW7KV8F3T4', 'bitcoin', null, { segwit: true })
+      valid('tb1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3q0sl5k7', 'bitcoin', null, { segwit: true })
+      valid('bc1pw508d6qejxtdg4y5r3zarvary0c5xw7kw508d6qejxtdg4y5r3zarvary0c5xw7k7grplx', 'bitcoin', null, { segwit: true })
+      valid('BC1SW50QA3JX3S', 'bitcoin', null, { segwit: true })
+      valid('bc1zw508d6qejxtdg4y5r3zarvaryvg6kdaj', 'bitcoin', null, { segwit: true })
+      valid('tb1qqqqqp399et2xygdj5xreqhjjvcmzhxw4aywxecjdzew6hylgvsesrxh6hy', 'bitcoin', null, { segwit: true })
 
       invalid('tc1qw508d6qejxtdg4y5r3zarvary0c5xw7kg3g4ty', 'bitcoin')
       invalid('bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t5', 'bitcoin')

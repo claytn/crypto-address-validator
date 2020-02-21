@@ -82,7 +82,17 @@ function isValidP2PKHandP2SHAddress (address, currency, networkType) {
 }
 
 module.exports = {
-  isValidAddress: function (address, currency, networkType) {
-    return isValidP2PKHandP2SHAddress(address, currency, networkType) || segwit.isValidAddress(address)
+  isValidAddress: function (address, currency, networkType, opts) {
+    if (opts == null) {
+      opts = {
+        segwit: true,
+      }
+    }
+
+    if (opts.segwit) {
+      return isValidP2PKHandP2SHAddress(address, currency, networkType) || segwit.isValidAddress(address)
+    }
+
+    return isValidP2PKHandP2SHAddress(address, currency, networkType)
   }
 }
