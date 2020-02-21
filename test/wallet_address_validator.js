@@ -90,6 +90,23 @@ describe('WAValidator.validate()', function () {
       valid('2MxKEf2su6FGAUfCEAHreGFQvEYrfYNHvL7', 'bitcoincash', 'testnet')
     })
 
+    it('should return true for correct bsv addresses', function () {
+      valid('12KYrjTdVGjFMtaxERSk3gphreJ5US8aUP', 'bitcoinsv')
+      valid('12QeMLzSrB8XH8FvEzPMVoRxVAzTr5XM2y', 'bitcoinsv')
+      valid('12QeMLzSrB8XH8FvEzPMVoRxVAzTr5XM2y', 'bsv')
+      valid('12QeMLzSrB8XH8FvEzPMVoRxVAzTr5XM2y', 'bsv', 'prod')
+      invalid('12QeMLzSrB8XH8FvEzPMVoRxVAzTr5XM2y', 'bsv', 'testnet')
+      valid('12QeMLzSrB8XH8FvEzPMVoRxVAzTr5XM2y', 'bsv', 'both')
+      valid('1oNLrsHnBcR6dpaBpwz3LSwutbUNkNSjs', 'bitcoinsv')
+      invalid('mzBc4XEFSdzCDcTxAgf6EZXgsZWpztRhef', 'bitcoinsv', 'prod')
+      valid('mzBc4XEFSdzCDcTxAgf6EZXgsZWpztRhef', 'bitcoinsv', 'testnet')
+      valid('mzBc4XEFSdzCDcTxAgf6EZXgsZWpztRhef', 'bitcoinsv', 'both')
+
+      // p2sh addresses
+      valid('3NJZLcZEEYBpxYEUGewU4knsQRn1WM5Fkt', 'bitcoinsv')
+      valid('2MxKEf2su6FGAUfCEAHreGFQvEYrfYNHvL7', 'bsv', 'testnet')
+    })
+
     it('should return true for correct litecoin addresses', function () {
       valid('LVg2kJoFNg45Nbpy53h7Fe1wKyeXVRhMH9', 'litecoin')
       valid('LVg2kJoFNg45Nbpy53h7Fe1wKyeXVRhMH9', 'LTC')

@@ -40,6 +40,11 @@ const CURRENCIES = [{
   addressTypes: { prod: ['00', '05'], testnet: ['6f', 'c4'] },
   validator: BTCValidator
 }, {
+  name: 'BitcoinSV',
+  symbol: 'bsv',
+  addressTypes: { prod: ['00', '05'], testnet: ['6f', 'c4'] },
+  validator: BTCValidator
+}, {
   name: 'LiteCoin',
   symbol: 'ltc',
   addressTypes: { prod: ['30', '05', '32'], testnet: ['6f', 'c4', '3a'] },
