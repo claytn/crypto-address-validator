@@ -430,6 +430,10 @@ const CURRENCIES = [{
   symbol: 'wtc',
   validator: ETHValidator
 }, {
+  name: 'Dai',
+  symbol: 'dai',
+  validator: ETHValidator
+}, {
   name: 'Lisk',
   symbol: 'lsk',
   validator: LSKValidator
