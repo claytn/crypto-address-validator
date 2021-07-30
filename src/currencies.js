@@ -434,6 +434,10 @@ const CURRENCIES = [{
   symbol: 'dai',
   validator: ETHValidator
 }, {
+  name: 'Compound',
+  symbol: 'comp',
+  validator: ETHValidator
+}, {
   name: 'Lisk',
   symbol: 'lsk',
   validator: LSKValidator
