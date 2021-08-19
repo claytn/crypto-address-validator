@@ -438,6 +438,22 @@ const CURRENCIES = [{
   symbol: 'comp',
   validator: ETHValidator
 }, {
+  name: 'Wrapped Bitcoin',
+  symbol: 'wbtc',
+  validator: ETHValidator
+}, {
+  name: 'Gemini Dollar',
+  symbol: 'gusd',
+  validator: ETHValidator
+}, {
+  name: 'PAX Gold',
+  symbol: 'paxg',
+  validator: ETHValidator
+}, {
+  name: 'Maker',
+  symbol: 'mkr',
+  validator: ETHValidator
+}, {
   name: 'Lisk',
   symbol: 'lsk',
   validator: LSKValidator
