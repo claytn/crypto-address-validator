@@ -462,6 +462,10 @@ const CURRENCIES = [{
   symbol: 'fil',
   validator: ETHValidator
 }, {
+  name: 'Binance USD',
+  symbol: 'busd',
+  validator: ETHValidator
+}, {
   name: 'Lisk',
   symbol: 'lsk',
   validator: LSKValidator
