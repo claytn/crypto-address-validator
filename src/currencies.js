@@ -454,6 +454,14 @@ const CURRENCIES = [{
   symbol: 'mkr',
   validator: ETHValidator
 }, {
+  name: 'Uniswap',
+  symbol: 'uni',
+  validator: ETHValidator
+}, {
+  name: 'Filecoin',
+  symbol: 'fil',
+  validator: ETHValidator
+}, {
   name: 'Lisk',
   symbol: 'lsk',
   validator: LSKValidator
