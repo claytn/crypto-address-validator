@@ -22,6 +22,7 @@ const ZILValidator = require('./zil_validator')
 const NXSValidator = require('./nxs_validator')
 const IOSTValidator = require('./iost_validator')
 const XTZValidator = require('./xtz_validator')
+const FILValidator = require('./filecoin_validator')
 
 // defines P2PKH and P2SH address types for standard (prod) and testnet networks
 const CURRENCIES = [{
@@ -460,7 +461,7 @@ const CURRENCIES = [{
 }, {
   name: 'Filecoin',
   symbol: 'fil',
-  validator: ETHValidator
+  validator: FILValidator
 }, {
   name: 'Binance USD',
   symbol: 'busd',
