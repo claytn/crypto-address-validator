@@ -459,6 +459,10 @@ const CURRENCIES = [{
   symbol: 'uni',
   validator: ETHValidator
 }, {
+  name: 'Polygon',
+  symbol: 'matic',
+  validator: ETHValidator
+}, {
   name: 'Filecoin',
   symbol: 'fil',
   validator: FILValidator
