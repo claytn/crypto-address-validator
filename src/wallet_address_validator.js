@@ -11,5 +11,11 @@ module.exports = {
     }
 
     throw new Error('Missing validator for currency: ' + currencyNameOrSymbol)
+  },
+  /** Given a currency name or symbol, returns true if the currency has a supported validator function available */
+  isCurrencySupported: function(currencyNameOrSymbol) {
+      const currency = currencies.getByNameOrSymbol(currencyNameOrSymbol || DEFAULT_CURRENCY_NAME);
+
+      return currency && currency.validator;
   }
 }
