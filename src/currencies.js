@@ -463,6 +463,10 @@ const CURRENCIES = [{
   symbol: 'fil',
   validator: FILValidator
 }, {
+  name: 'SushiSwap',
+  symbol: 'sushi',
+  validator: ETHValidator
+}, {
   name: 'Binance USD',
   symbol: 'busd',
   validator: ETHValidator
